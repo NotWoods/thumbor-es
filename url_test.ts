@@ -224,8 +224,7 @@ Deno.test(async function testCannotAlignWithoutResize() {
   await buildThumborUrl({
     image: "http://a.com/b.png",
     resize: undefined,
-    horizontalAlign: "center",
-    verticalAlign: "middle",
+    align: { horizontal: "center", vertical: "middle" },
   });
   passTypeTest();
 });

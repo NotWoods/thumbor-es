@@ -89,14 +89,16 @@ export interface ThumborUrlResizedOptions extends ThumborUrlOptions {
    * Flip the image vertically.
    */
   flipVertically?: boolean;
-  /**
-   * Set the horizontal alignment for the image when image gets cropped by resizing.
-   */
-  horizontalAlign?: HorizontalAlign;
-  /**
-   * Set the vertical alignment for the image when image gets cropped by resizing.
-   */
-  verticalAlign?: VerticalAlign;
+  align?: {
+    /**
+     * Set the horizontal alignment for the image when image gets cropped by resizing.
+     */
+    horizontal?: HorizontalAlign;
+    /**
+     * Set the vertical alignment for the image when image gets cropped by resizing.
+     */
+    vertical?: VerticalAlign;
+  };
 }
 
 export interface ResizeOptions {
@@ -157,8 +159,10 @@ export async function buildThumborUrl({
     smart: isSmart,
     flipHorizontally,
     flipVertically,
-    horizontalAlign: cropHorizontalAlign,
-    verticalAlign: cropVerticalAlign,
+    align: {
+      horizontal: cropHorizontalAlign,
+      vertical: cropVerticalAlign,
+    } = {},
     filters = [],
   } = options;
   const fitInStyle = options.fitIn === true ? "fit-in" : options.fitIn;

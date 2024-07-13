@@ -1,5 +1,5 @@
 {
-  "name": "thumbor-es",
+  "name": "@notwoods/thumbor-es",
   "version": "0.1.0",
   "exports": "./mod.ts",
   "tasks": {

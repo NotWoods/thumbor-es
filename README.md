@@ -1,4 +1,4 @@
-# thumbor-es - TypeScript Thumbor client for Node, Deno, Bun, & browsers
+# @notwoods/thumbor-es - TypeScript Thumbor client for Node, Deno, Bun, & browsers
 
 TypeScript client for the
 [Thumbor image service](https://github.com/globocom/thumbor) which allows you to
@@ -66,3 +66,7 @@ const url = await buildThumborUrl({
 });
 // Produces: /unsafe/200x100/filters:round_corner(10,255,255,255):watermark(/unsafe/200x100/example.com/overlay1.png,0,0,0):watermark(/unsafe/50x50/example.com/overlay2.png,75,25,0):quality(85)/example.com/background.png
 ```
+
+## Comparison to other libraries
+
+thumbor-es has a JavaScript-style API with an options object, unlike other older libraries using Java-style builder classes. It's also built with the latest browsers in mind, and is tinier, faster, and better tested.
