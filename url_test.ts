@@ -5,10 +5,11 @@ import {
   assertThrows,
 } from "@std/assert";
 import {
+  ORIGINAL_SIZE,
   brightness,
   buildThumborUrl,
   contrast,
-  ORIGINAL_SIZE,
+  grayscale,
   roundCorner,
   watermark,
 } from "./mod.ts";
@@ -23,6 +24,16 @@ Deno.test(async function testNoConfig() {
       image: "http://a.com/b.png",
     }),
     "/unsafe/http://a.com/b.png"
+  );
+});
+
+Deno.test(async function testHost() {
+  assertEquals(
+    await buildThumborUrl({
+      image: "http://a.com/b.png",
+      host: "https://thumbor.example.com",
+    }),
+    "https://thumbor.example.com/unsafe/http://a.com/b.png"
   );
 });
 
@@ -47,7 +58,7 @@ Deno.test(async function testComplexUnsafeBuild() {
         width: 40,
         height: 40,
       },
-      filters: [watermark(watermarkImageUrl, 10, 10), roundCorner(5)],
+      filters: [watermark(watermarkImageUrl, { x: 10, y: 10 }), roundCorner(5)],
     }),
     expected
   );
@@ -76,7 +87,7 @@ Deno.test(async function testComplexSafeBuild() {
         height: 40,
       },
       filters: [
-        watermark(watermarkImageUrl, 10, 10),
+        watermark(watermarkImageUrl, { x: 10, y: 10 }),
         roundCorner(5, { r: 255, g: 255, b: 255 }),
       ],
     }),
@@ -219,6 +230,52 @@ Deno.test(async function testTrim() {
   assertEquals(url, "/unsafe/trim:top-left:100/http://a.com/b.png");
 });
 
+Deno.test(async function testCannotIssueBadTrim() {
+  const image = "http://a.com/b.png";
+  await assertRejects(() =>
+    buildThumborUrl({
+      image,
+      trim: {
+        value: "top-left",
+        colorTolerance: -1,
+      },
+    })
+  );
+
+  await assertRejects(() =>
+    buildThumborUrl({
+      image,
+      trim: {
+        value: "top-left",
+        colorTolerance: 443,
+      },
+    })
+  );
+
+  await assertRejects(() =>
+    buildThumborUrl({
+      image,
+      trim: {
+        // @ts-expect-error -- testing bad string
+        value: "",
+        colorTolerance: 1,
+      },
+    })
+  );
+});
+
+Deno.test(async function testDoubleAlignmentMethodSetsBoth() {
+  const url = await buildThumborUrl({
+    image: "http://a.com/b.png",
+    resize: { width: 10, height: 5 },
+    align: {
+      vertical: "middle",
+      horizontal: "center",
+    },
+  });
+  assertEquals(url, "/unsafe/10x5/center/middle/http://a.com/b.png");
+});
+
 Deno.test(async function testCannotAlignWithoutResize() {
   // @ts-expect-error -- align should not be allowed when resize is not set
   await buildThumborUrl({
@@ -227,6 +284,27 @@ Deno.test(async function testCannotAlignWithoutResize() {
     align: { horizontal: "center", vertical: "middle" },
   });
   passTypeTest();
+});
+
+Deno.test(async function testCannotIssueBadUrl() {
+  await assertRejects(() => buildThumborUrl({ image: "" }));
+});
+
+Deno.test(async function testCannotIssueBadFilter() {
+  const image = "http://a.com/b.png";
+  await assertRejects(() =>
+    buildThumborUrl({
+      image,
+      filters: [""],
+    })
+  );
+
+  await assertRejects(() =>
+    buildThumborUrl({
+      image,
+      filters: [grayscale(), ""],
+    })
+  );
 });
 
 Deno.test(async function testCannotIssueBadCrop() {

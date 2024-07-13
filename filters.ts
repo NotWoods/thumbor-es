@@ -59,6 +59,7 @@ export function quality(amount: number): string {
   return `quality(${amount})`;
 }
 
+/** Describe red, green, and blue values */
 export interface Color {
   /** Amount of red in the color */
   r: number;
@@ -151,38 +152,28 @@ export function roundCorner(
 }
 
 /**
- * This filter adds a watermark to the image at (0, 0).
- *
- * @param imageUrl Watermark image URL. It is very important to understand that the same image
- * loader that Thumbor uses will be used here.
- * @throws {RangeError} if `imageUrl` is blank.
- */
-export function watermark(imageUrl: string): string;
-/**
  * This filter adds a watermark to the image.
  *
  * @param imageUrl Watermark image URL. It is very important to understand that the same image
  * loader that Thumbor uses will be used here.
- * @param x Horizontal position that the watermark will be in. Positive numbers indicate position
+ * @param options Named options.
+ * @param options.x Horizontal position that the watermark will be in. Positive numbers indicate position
  * from the left and negative numbers indicate position from the right.
- * @param y Vertical position that the watermark will be in. Positive numbers indicate position
+ * @param options.y Vertical position that the watermark will be in. Positive numbers indicate position
  * from the top and negative numbers indicate position from the bottom.
- * @param transparency Watermark image transparency. Should be a number between 0 (fully opaque)
+ * @param options.transparency Watermark image transparency. Should be a number between 0 (fully opaque)
  * and 100 (fully transparent).
  * @throws {RangeError} if `imageUrl` is blank.
  */
 export function watermark(
   imageUrl: string,
-  x: number,
-  y: number,
-  transparency?: number
-): string;
-export function watermark(
-  imageUrl: string,
-  x: number = 0,
-  y: number = 0,
-  transparency: number = 0
+  options: {
+    x?: number;
+    y?: number;
+    transparency?: number;
+  } = {}
 ): string {
+  const { x = 0, y = 0, transparency = 0 } = options;
   if (!imageUrl) {
     throw new TypeError("Image URL must not be blank.");
   }
@@ -261,11 +252,13 @@ export const equalize = () => "equalize()";
 
 /**
  * This filter adds a blur effect to the image using the specified radius and sigma.
- * @param radius Radius used in the gaussian function to generate a matrix, maximum value is 150.
- *               The bigger the radius more blurred will be the image.
- * @param sigma Sigma used in the gaussian function.
+ * @param options Named options.
+ * @param options.radius Radius used in the gaussian function to generate a matrix, maximum value is 150.
+ * The bigger the radius more blurred will be the image.
+ * @param options.sigma Sigma used in the gaussian function.
  */
-export function blur(radius: number, sigma = 0): string {
+export function blur(options: { radius: number; sigma?: number }): string {
+  const { radius, sigma = 0 } = options;
   checkInclusiveRange(radius, 1, 150, "Radius");
   if (sigma < 0) {
     throw new RangeError("Sigma must be greater than zero.");

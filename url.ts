@@ -20,7 +20,40 @@ export type ImageFormat = "webp" | "jpeg" | "avif" | "heic" | "png";
 /** Style of resizing for 'fit-in'. */
 export type FitInStyle = "fit-in" | "full-fit-in" | "adaptive-fit-in";
 
-export interface ThumborUrlOptions {
+export interface BaseThumborUrlOptions {
+  /**
+   * Path to the image to be processed by Thumbor.
+   */
+  image: string;
+  /**
+   * Hostname of the Thumbor server, such as `http://localhost:8888` or `https://thumbor.example.com`.
+   * If provided, the URL will be generated as an absolute URL.
+   * If not provided, the URL will be generated as a relative URL.
+   */
+  host?: string;
+  /**
+   * Security key used to sign secure URLs.
+   * Should be kept secret and have corresponding configuration on the Thumbor server.
+   * @see https://thumbor.readthedocs.io/en/latest/configuration.html#security-key
+   *
+   * If not provided, the URL will be generated as an unsafe URL.
+   * @see https://thumbor.readthedocs.io/en/latest/configuration.html#allow-unsafe-url
+   */
+  key?: string;
+  /**
+   * Either retrieve the image (default) or the metadata of the image.
+   * @see https://thumbor.readthedocs.io/en/latest/usage.html#image-endpoint
+   * @see https://thumbor.readthedocs.io/en/latest/usage.html#metadata-endpoint
+   */
+  endpoint?: "image" | "metadata";
+  /**
+   * Resize the image to be a specific width and height.
+   * How it is resized can be further configured with other options.
+   */
+  resize?: {
+    width: number | OriginalSize;
+    height: number | OriginalSize;
+  };
   /**
    * Crop the image between two points.
    *
@@ -80,7 +113,12 @@ export interface ThumborUrlOptions {
 }
 
 /** These options are only available if the image will be resized. */
-export interface ThumborUrlResizedOptions extends ThumborUrlOptions {
+export interface ThumborUrlResizedOptions extends BaseThumborUrlOptions {
+  /**
+   * Resize the image to be a specific width and height.
+   * How it is resized can be further configured with other options.
+   */
+  resize: NonNullable<BaseThumborUrlOptions["resize"]>;
   /**
    * Flip the image horizontally.
    */
@@ -101,51 +139,19 @@ export interface ThumborUrlResizedOptions extends ThumborUrlOptions {
   };
 }
 
-export interface ResizeOptions {
-  width: number | OriginalSize;
-  height: number | OriginalSize;
-}
-
-export interface BaseBuildThumborUrlOptions {
-  /**
-   * Path to the image to be processed by Thumbor.
-   */
-  image: string;
-  /**
-   * Hostname of the Thumbor server, such as `http://localhost:8888` or `https://thumbor.example.com`.
-   * If provided, the URL will be generated as an absolute URL.
-   * If not provided, the URL will be generated as a relative URL.
-   */
-  host?: string;
-  /**
-   * Security key used to sign secure URLs.
-   * Should be kept secret and have corresponding configuration on the Thumbor server.
-   * @see https://thumbor.readthedocs.io/en/latest/configuration.html#security-key
-   *
-   * If not provided, the URL will be generated as an unsafe URL.
-   * @see https://thumbor.readthedocs.io/en/latest/configuration.html#allow-unsafe-url
-   */
-  key?: string;
-  /**
-   * Either retrieve the image (default) or the metadata of the image.
-   * @see https://thumbor.readthedocs.io/en/latest/usage.html#image-endpoint
-   * @see https://thumbor.readthedocs.io/en/latest/usage.html#metadata-endpoint
-   */
-  endpoint?: "image" | "metadata";
-  /**
-   * Resize the image to be a specific width and height.
-   * How it is resized can be further configured with other options.
-   */
-  resize?: ResizeOptions;
-}
-
+/**
+ * Builds URL for the Thumbor image service using a fluent API.
+ */
 export function buildThumborUrl(
-  args: BaseBuildThumborUrlOptions & { resize?: undefined } & ThumborUrlOptions
+  args: BaseThumborUrlOptions & { resize?: undefined }
 ): Promise<string>;
+/**
+ * Builds URL for the Thumbor image service using a fluent API.
+ *
+ * Additionally options are available when resizing the image.
+ */
 export function buildThumborUrl(
-  args: BaseBuildThumborUrlOptions & {
-    resize: ResizeOptions;
-  } & ThumborUrlResizedOptions
+  args: ThumborUrlResizedOptions
 ): Promise<string>;
 export async function buildThumborUrl({
   image,
@@ -154,7 +160,9 @@ export async function buildThumborUrl({
   endpoint,
   resize,
   ...options
-}: BaseBuildThumborUrlOptions & ThumborUrlResizedOptions): Promise<string> {
+}: Omit<ThumborUrlResizedOptions, "resize"> & {
+  resize?: BaseThumborUrlOptions["resize"];
+}): Promise<string> {
   const {
     smart: isSmart,
     flipHorizontally,
