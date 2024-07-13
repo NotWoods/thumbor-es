@@ -2,7 +2,9 @@ import { encodeBase64 } from "jsr:@std/encoding/base64";
 import { hmacSha1 } from "./hmac.ts";
 
 /** Original size for image width or height. **/
-export type OriginalSize = "orig";
+export const ORIGINAL_SIZE = "orig";
+/** Original size for image width or height. **/
+export type OriginalSize = typeof ORIGINAL_SIZE;
 
 /** Horizontal alignment for crop positioning. */
 export type HorizontalAlign = "left" | "center" | "right";
@@ -51,6 +53,20 @@ export interface ThumborUrlOptions {
         colorTolerance?: number;
       };
   /**
+   * Constrain the image size inside the resized box, scaling as needed.
+   *
+   * fit-in means that the generated image should not be auto-cropped and otherwise just fit in an imaginary box specified by ExF.
+   * If a full fit-in is specified, then the largest size is used for cropping (width instead of height, or the other way around).
+   * If adaptive fit-in is specified, it inverts requested width and height if it would get a better image definition;
+   *
+   * `true` is equivalent to `fit-in`.
+   */
+  fitIn?: FitInStyle | boolean;
+  /**
+   * Use smart cropping for determining the important portion of an image.
+   */
+  smart?: boolean;
+  /**
    * Add one or more filters to the image.
    *
    * If you have custom filters you can supply them as a string. (e.g. `"my_filter(1,2,3)"`).
@@ -74,11 +90,6 @@ export interface ThumborUrlResizedOptions extends ThumborUrlOptions {
    */
   flipVertically?: boolean;
   /**
-   * Constrain the image size inside the resized box, scaling as needed.
-   * `true` is equivalent to `fit-in`.
-   */
-  fitIn?: FitInStyle | boolean;
-  /**
    * Set the horizontal alignment for the image when image gets cropped by resizing.
    */
   horizontalAlign?: HorizontalAlign;
@@ -86,10 +97,6 @@ export interface ThumborUrlResizedOptions extends ThumborUrlOptions {
    * Set the vertical alignment for the image when image gets cropped by resizing.
    */
   verticalAlign?: VerticalAlign;
-  /**
-   * Use smart cropping for determining the important portion of an image.
-   */
-  smart?: boolean;
 }
 
 export interface ResizeOptions {
@@ -98,10 +105,36 @@ export interface ResizeOptions {
 }
 
 export interface BaseBuildThumborUrlOptions {
+  /**
+   * Path to the image to be processed by Thumbor.
+   */
   image: string;
+  /**
+   * Hostname of the Thumbor server, such as `http://localhost:8888` or `https://thumbor.example.com`.
+   * If provided, the URL will be generated as an absolute URL.
+   * If not provided, the URL will be generated as a relative URL.
+   */
   host?: string;
+  /**
+   * Security key used to sign secure URLs.
+   * Should be kept secret and have corresponding configuration on the Thumbor server.
+   * @see https://thumbor.readthedocs.io/en/latest/configuration.html#security-key
+   *
+   * If not provided, the URL will be generated as an unsafe URL.
+   * @see https://thumbor.readthedocs.io/en/latest/configuration.html#allow-unsafe-url
+   */
   key?: string;
+  /**
+   * Either retrieve the image (default) or the metadata of the image.
+   * @see https://thumbor.readthedocs.io/en/latest/usage.html#image-endpoint
+   * @see https://thumbor.readthedocs.io/en/latest/usage.html#metadata-endpoint
+   */
   endpoint?: "image" | "metadata";
+  /**
+   * Resize the image to be a specific width and height.
+   * How it is resized can be further configured with other options.
+   */
+  resize?: ResizeOptions;
 }
 
 export function buildThumborUrl(
@@ -119,9 +152,7 @@ export async function buildThumborUrl({
   endpoint,
   resize,
   ...options
-}: BaseBuildThumborUrlOptions & {
-  resize?: ResizeOptions;
-} & ThumborUrlResizedOptions): Promise<string> {
+}: BaseBuildThumborUrlOptions & ThumborUrlResizedOptions): Promise<string> {
   const {
     smart: isSmart,
     flipHorizontally,
@@ -132,6 +163,11 @@ export async function buildThumborUrl({
   } = options;
   const fitInStyle = options.fitIn === true ? "fit-in" : options.fitIn;
 
+  // #region Validation
+
+  if (!image) {
+    throw new TypeError("Image must not be blank.");
+  }
   if (filters.some((filter) => !filter.trim())) {
     throw new TypeError("Filter must not be blank.");
   }
@@ -180,6 +216,8 @@ export async function buildThumborUrl({
     trimColorTolerance = colorTolerance;
   }
 
+  // #endregion
+
   const meta = endpoint === "metadata";
   const assembleConfig = () => {
     let config = "";
@@ -204,10 +242,11 @@ export async function buildThumborUrl({
       config += `${left}x${top}:${right}x${bottom}/`;
     }
 
+    if (fitInStyle) {
+      config += `${fitInStyle}/`;
+    }
+
     if (resize) {
-      if (fitInStyle) {
-        config += `${fitInStyle}/`;
-      }
       if (flipHorizontally) {
         config += "-";
       }
@@ -221,17 +260,17 @@ export async function buildThumborUrl({
       if (resize.height !== undefined) {
         config += `${resize.height}`;
       }
-      if (isSmart) {
-        config += "/smart";
-      } else {
-        if (cropHorizontalAlign) {
-          config += `/${cropHorizontalAlign}`;
-        }
-        if (cropVerticalAlign) {
-          config += `/${cropVerticalAlign}`;
-        }
+      if (cropHorizontalAlign) {
+        config += `/${cropHorizontalAlign}`;
+      }
+      if (cropVerticalAlign) {
+        config += `/${cropVerticalAlign}`;
       }
       config += "/";
+    }
+
+    if (isSmart) {
+      config += "smart/";
     }
 
     if (filters.length > 0) {
@@ -244,6 +283,7 @@ export async function buildThumborUrl({
   const config = assembleConfig();
   let path: string;
   if (key) {
+    // If key is provided, return a safe URL.
     const encrypted = await hmacSha1(config, key);
     const encoded = encodeBase64(encrypted)
       .replace(/\+/g, "-")
@@ -253,6 +293,7 @@ export async function buildThumborUrl({
     path = meta ? config : `unsafe/${config}`;
   }
 
+  // If host is provided, prepend it to the path.
   if (host) {
     return new URL(path, host).href;
   } else {

@@ -30,7 +30,7 @@ export function brightness(amount: number): string {
  *
  * @param amount -100 to 100 - The amount (in %) to change the image contrast. Positive numbers
  * increase contrast and negative numbers decrease contrast.
- * @throws IllegalArgumentException if {@code amount} outside bounds.
+ * @throws {RangeError} if `amount` outside bounds.
  */
 export function contrast(amount: number): string {
   checkInclusiveRange(amount, -100, 100);
@@ -41,7 +41,7 @@ export function contrast(amount: number): string {
  * This filter adds noise to the image.
  *
  * @param amount 0 to 100 - The amount (in %) of noise to add to the image.
- * @throws IllegalArgumentException if {@code amount} outside bounds.
+ * @throws {RangeError} if `amount` outside bounds.
  */
 export function noise(amount: number): string {
   checkInclusiveRange(amount, 0, 100);
@@ -52,7 +52,7 @@ export function noise(amount: number): string {
  * This filter changes the overall quality of the JPEG image (does nothing for PNGs or GIFs).
  *
  * @param amount 0 to 100 - The quality level (in %) that the end image will feature.
- * @throws IllegalArgumentException if {@code amount} outside bounds.
+ * @throws {RangeError} if `amount` outside bounds.
  */
 export function quality(amount: number): string {
   checkInclusiveRange(amount, 0, 100);
@@ -75,7 +75,7 @@ export interface Color {
  * @param color.r The amount of redness in the picture. Can range from -100 to 100 in percentage.
  * @param color.g The amount of greenness in the picture. Can range from -100 to 100 in percentage.
  * @param color.b The amount of blueness in the picture. Can range from -100 to 100 in percentage.
- * @throws IllegalArgumentException if {@code r}, {@code g}, or {@code b} are outside of bounds.
+ * @throws {RangeError} if `r`, `g`, or `b` are outside of bounds.
  */
 export function rgb(color: Color): string {
   const { r, g, b } = color;
@@ -94,7 +94,7 @@ export function rgb(color: Color): string {
  * @param color.g The amount of greenness in the fill color. Can range from 0 to 255.
  * @param color.b The amount of blueness in the fill color. Can range from 0 to 255.
  */
-export function roundColor(
+export function roundCorner(
   radiusInner: number,
   color?: Color | "transparent"
 ): string;
@@ -109,12 +109,12 @@ export function roundColor(
  * @param color.g The amount of greenness in the fill color. Can range from 0 to 255.
  * @param color.b The amount of blueness in the fill color. Can range from 0 to 255.
  */
-export function roundColor(
+export function roundCorner(
   radiusInner: number,
   radiusOuter: number,
   color: Color | "transparent"
 ): string;
-export function roundColor(
+export function roundCorner(
   radiusInner: number,
   radiusOuterOrColor?: number | Color | "transparent",
   maybeColor?: Color | "transparent"
@@ -143,9 +143,9 @@ export function roundColor(
     filter += `|${radiusOuter}`;
   }
   if (color) {
-    filter += `${color.r},${color.g},${color.b})`;
+    filter += `,${color.r},${color.g},${color.b})`;
   } else {
-    filter += "0,0,0,1)";
+    filter += ",0,0,0,1)";
   }
   return filter;
 }
@@ -155,7 +155,7 @@ export function roundColor(
  *
  * @param imageUrl Watermark image URL. It is very important to understand that the same image
  * loader that Thumbor uses will be used here.
- * @throws IllegalArgumentException if {@code image} is blank.
+ * @throws {RangeError} if `imageUrl` is blank.
  */
 export function watermark(imageUrl: string): string;
 /**
@@ -169,7 +169,7 @@ export function watermark(imageUrl: string): string;
  * from the top and negative numbers indicate position from the bottom.
  * @param transparency Watermark image transparency. Should be a number between 0 (fully opaque)
  * and 100 (fully transparent).
- * @throws IllegalArgumentException if {@code image} is blank.
+ * @throws {RangeError} if `imageUrl` is blank.
  */
 export function watermark(
   imageUrl: string,

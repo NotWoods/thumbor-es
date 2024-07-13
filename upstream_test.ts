@@ -1,26 +1,11 @@
+/**
+ * @module
+ * Tests defined on the upstream client project as valid.
+ * @see https://thumbor.readthedocs.io/en/latest/libraries.html#library-tests-scenarios
+ */
+
 import { assertEquals } from "jsr:@std/assert";
 import { brightness, buildThumborUrl, contrast } from "./mod.ts";
-
-/**
- * @see https://thumbor.readthedocs.io/en/latest/libraries.html#library-tests-generating-hmac-of-the-urls
- */
-async function signInThumbor(key: string, str: string) {
-  // bash command to call thumbor's decrypt method
-  const command = new Deno.Command("python3", {
-    args: [
-      "-c",
-      `'from libthumbor.url_signers.base64_hmac_sha1 import UrlSigner; signer = UrlSigner("${key}"); print(signer.signature("${str}").decode("utf-8"))'`,
-    ],
-  });
-
-  const { code, stdout, stderr } = await command.output();
-  assertEquals(
-    code,
-    0,
-    `Failed to execute command: ${new TextDecoder().decode(stderr)}`
-  );
-  return new TextDecoder().decode(stdout);
-}
 
 const securityKey = "my-security-key";
 const imageUrl = "my.server.com/some/path/to/image.jpg";
