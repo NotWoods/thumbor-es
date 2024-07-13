@@ -3,7 +3,7 @@ import {
   assertRejects,
   assertStringIncludes,
   assertThrows,
-} from "jsr:@std/assert";
+} from "@std/assert";
 import {
   brightness,
   buildThumborUrl,

@@ -225,7 +225,7 @@ export function sharpen(
 export function fill(
   color: string | "auto" | "blur" | "transparent",
   options: { fillTransparent?: boolean } = {}
-) {
+): string {
   return `fill(${color}${options.fillTransparent ? ",1" : ""})`;
 }
 
@@ -281,4 +281,4 @@ export const noUpscale = () => "no_upscale()";
  * @param angle The euler angle to rotate the image by.
  * Numbers greater or equal than 360 will be transformed to a equivalent angle between 0 and 359.
  */
-export const rotate = (angle: number) => `rotate(${angle})`;
+export const rotate = (angle: number): string => `rotate(${angle})`;

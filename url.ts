@@ -1,4 +1,4 @@
-import { encodeBase64 } from "jsr:@std/encoding/base64";
+import { encodeBase64 } from "@std/encoding";
 import { hmacSha1 } from "./hmac.ts";
 
 /** Original size for image width or height. **/

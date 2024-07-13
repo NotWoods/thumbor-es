@@ -4,7 +4,7 @@
  * @see https://thumbor.readthedocs.io/en/latest/libraries.html#library-tests-scenarios
  */
 
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { brightness, buildThumborUrl, contrast } from "./mod.ts";
 
 const securityKey = "my-security-key";
