@@ -302,7 +302,7 @@ export async function buildThumborUrl({
       .replace(/\//g, "_");
     path = `${encoded}/${config}`;
   } else {
-    path = meta ? config : `unsafe/${config}`;
+    path = `unsafe/${config}`;
   }
 
   // If host is provided, prepend it to the path.

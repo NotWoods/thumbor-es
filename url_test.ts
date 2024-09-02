@@ -101,7 +101,7 @@ Deno.test(async function testBuildMeta() {
     endpoint: "metadata",
   });
   assertStringIncludes(url, "/meta/");
-  assertEquals(url.startsWith("/meta/"), true);
+  assertEquals(url.startsWith("/unsafe/meta/"), true);
 });
 
 Deno.test(async function testResize() {
