@@ -20,6 +20,10 @@ export type ImageFormat = "webp" | "jpeg" | "avif" | "heic" | "png";
 /** Style of resizing for 'fit-in'. */
 export type FitInStyle = "fit-in" | "full-fit-in" | "adaptive-fit-in";
 
+/**
+ * Base options for building a URL for the Thumbor image service.
+ * Additional options are available when resizing the image, see {@link ThumborUrlResizedOptions}.
+ */
 export interface BaseThumborUrlOptions {
   /**
    * Path to the image to be processed by Thumbor.

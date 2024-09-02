@@ -1,7 +1,10 @@
 {
   "name": "@notwoods/thumbor-es",
-  "version": "0.1.2",
-  "exports": "./mod.ts",
+  "version": "0.2.0",
+  "exports": {
+    ".": "./mod.ts",
+    "./filters": "./filters.ts"
+  },
   "tasks": {
     "test": "deno test --coverage"
   },
