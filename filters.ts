@@ -1,3 +1,24 @@
+/**
+ * @module
+ *
+ * This module contains filters that can be passed to Thumbor to modify images.
+ * @see https://thumbor.readthedocs.io/en/latest/filters.html
+ *
+ * @example
+ * ```ts
+ * import { buildThumborUrl } from "@notwoods/thumbor-es";
+ * import * as filters from "@notwoods/thumbor-es/filters";
+ *
+ * const url = await buildThumborUrl({
+ *   image: "http://example.com",
+ *   filters: [
+ *     filters.brightness(30),
+ *     filters.roundCorner(10),
+ *   ]
+ * });
+ * ```
+ */
+
 import type { ImageFormat } from "./mod.ts";
 
 function checkInclusiveRange(

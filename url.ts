@@ -145,6 +145,12 @@ export interface ThumborUrlResizedOptions extends BaseThumborUrlOptions {
 
 /**
  * Builds URL for the Thumbor image service using a fluent API.
+ *
+ * @example
+ * ```ts
+ * import { buildThumborUrl } from "@notwoods/thumbor-es";
+ * const url = await buildThumborUrl({ image: "http://example.com" });
+ * ```
  */
 export function buildThumborUrl(
   args: BaseThumborUrlOptions & { resize?: undefined }
@@ -153,6 +159,18 @@ export function buildThumborUrl(
  * Builds URL for the Thumbor image service using a fluent API.
  *
  * Additionally options are available when resizing the image.
+ *
+ * @example
+ * ```ts
+ * import { buildThumborUrl } from "@notwoods/thumbor-es";
+ * const url = await buildThumborUrl({
+ *   image: "http://example.com/image.png",
+ *   resize: { width: 95, height: 95 },
+ *   align: { horizontal: "bottom", vertical: "right" },
+ *   flipHorizontally: true,
+ *   flipVertically: true,
+ * });
+ * ```
  */
 export function buildThumborUrl(
   args: ThumborUrlResizedOptions

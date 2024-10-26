@@ -2,6 +2,8 @@
 
 _TypeScript Thumbor client for Node, Deno, Bun, & browsers_
 
+[![JSR](https://jsr.io/badges/@notwoods/thumbor-es)](https://jsr.io/@notwoods/thumbor-es)
+
 TypeScript client for the
 [Thumbor image service](https://github.com/globocom/thumbor) which allows you to
 build URIs in an expressive fashion using a fluent API.
@@ -10,6 +12,18 @@ This library is fully compatible with all JS runtimes (using the
 [Web Cryptography API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API)).
 It's heavily based on Square's [Pollexor](https://github.com/square/pollexor)
 library for Java.
+
+Documentation for the different options and filters can be found in the JSDoc and [on JSR](https://jsr.io/@notwoods/thumbor-es/doc/filters).
+
+## Installation
+
+```sh
+# deno
+deno add jsr:@notwoods/thumbor-es
+
+# npm (use any of npx, yarn dlx, pnpm dlx, or bunx)
+npx jsr add @notwoods/thumbor-es
+```
 
 ## Examples
 
