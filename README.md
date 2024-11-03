@@ -13,7 +13,8 @@ This library is fully compatible with all JS runtimes (using the
 It's heavily based on Square's [Pollexor](https://github.com/square/pollexor)
 library for Java.
 
-Documentation for the different options and filters can be found in the JSDoc and [on JSR](https://jsr.io/@notwoods/thumbor-es/doc/filters).
+Documentation for the different options and filters can be found in the JSDoc
+and [on JSR](https://jsr.io/@notwoods/thumbor-es/doc/filters).
 
 ## Installation
 

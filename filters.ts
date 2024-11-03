@@ -25,11 +25,11 @@ function checkInclusiveRange(
   value: number,
   min: number,
   max: number,
-  label = "Amount"
+  label = "Amount",
 ): void {
   if (value < min || value > max) {
     throw new RangeError(
-      `${label} must be between ${min} and ${max}, inclusive.`
+      `${label} must be between ${min} and ${max}, inclusive.`,
     );
   }
 }
@@ -118,7 +118,7 @@ export function rgb(color: Color): string {
  */
 export function roundCorner(
   radiusInner: number,
-  color?: Color | "transparent"
+  color?: Color | "transparent",
 ): string;
 /**
  * This filter adds rounded corners to the image using the specified color as the background.
@@ -134,12 +134,12 @@ export function roundCorner(
 export function roundCorner(
   radiusInner: number,
   radiusOuter: number,
-  color: Color | "transparent"
+  color: Color | "transparent",
 ): string;
 export function roundCorner(
   radiusInner: number,
   radiusOuterOrColor?: number | Color | "transparent",
-  maybeColor?: Color | "transparent"
+  maybeColor?: Color | "transparent",
 ): string {
   let radiusOuter = 0;
   let color: Color | "transparent" | undefined;
@@ -192,7 +192,7 @@ export function watermark(
     x?: number;
     y?: number;
     transparency?: number;
-  } = {}
+  } = {},
 ): string {
   const { x = 0, y = 0, transparency = 0 } = options;
   if (!imageUrl) {
@@ -217,7 +217,7 @@ export function sharpen(
   radius: number,
   options: {
     luminanceOnly: boolean;
-  }
+  },
 ): string {
   return `sharpen(${amount},${radius},${options.luminanceOnly})`;
 }
@@ -236,7 +236,7 @@ export function sharpen(
  */
 export function fill(
   color: string | "auto" | "blur" | "transparent",
-  options: { fillTransparent?: boolean } = {}
+  options: { fillTransparent?: boolean } = {},
 ): string {
   return `fill(${color}${options.fillTransparent ? ",1" : ""})`;
 }

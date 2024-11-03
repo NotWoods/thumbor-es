@@ -21,7 +21,7 @@ Deno.test("Scenario 1 - Signing of a known url results", async () => {
   });
   assertEquals(
     url,
-    "/8ammJH8D-7tXy6kU3lTvoXlhu4o=/300x200/my.server.com/some/path/to/image.jpg"
+    "/8ammJH8D-7tXy6kU3lTvoXlhu4o=/300x200/my.server.com/some/path/to/image.jpg",
   );
 });
 
@@ -38,9 +38,9 @@ Deno.test(
     });
     assertEquals(
       url,
-      "/8ammJH8D-7tXy6kU3lTvoXlhu4o=/300x200/my.server.com/some/path/to/image.jpg"
+      "/8ammJH8D-7tXy6kU3lTvoXlhu4o=/300x200/my.server.com/some/path/to/image.jpg",
     );
-  }
+  },
 );
 
 Deno.test(
@@ -53,9 +53,9 @@ Deno.test(
     });
     assertEquals(
       url,
-      "/Ps3ORJDqxlSQ8y00T29GdNAh2CY=/meta/my.server.com/some/path/to/image.jpg"
+      "/Ps3ORJDqxlSQ8y00T29GdNAh2CY=/meta/my.server.com/some/path/to/image.jpg",
     );
-  }
+  },
 );
 
 Deno.test(
@@ -68,9 +68,9 @@ Deno.test(
     });
     assertEquals(
       url,
-      "/-2NHpejRK2CyPAm61FigfQgJBxw=/smart/my.server.com/some/path/to/image.jpg"
+      "/-2NHpejRK2CyPAm61FigfQgJBxw=/smart/my.server.com/some/path/to/image.jpg",
     );
-  }
+  },
 );
 
 Deno.test(
@@ -83,9 +83,9 @@ Deno.test(
     });
     assertEquals(
       url,
-      "/uvLnA6TJlF-Cc-L8z9pEtfasO3s=/fit-in/my.server.com/some/path/to/image.jpg"
+      "/uvLnA6TJlF-Cc-L8z9pEtfasO3s=/fit-in/my.server.com/some/path/to/image.jpg",
     );
-  }
+  },
 );
 
 Deno.test(
@@ -98,7 +98,7 @@ Deno.test(
     });
     assertEquals(
       url,
-      "/ZZtPCw-BLYN1g42Kh8xTcRs0Qls=/filters:brightness(10):contrast(20)/my.server.com/some/path/to/image.jpg"
+      "/ZZtPCw-BLYN1g42Kh8xTcRs0Qls=/filters:brightness(10):contrast(20)/my.server.com/some/path/to/image.jpg",
     );
-  }
+  },
 );

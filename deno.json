@@ -6,6 +6,7 @@
     "./filters": "./filters.ts"
   },
   "tasks": {
+    "npm": "deno run -A ./scripts/build_npm.ts",
     "test": "deno test --coverage"
   },
   "imports": {

@@ -4,13 +4,13 @@ export async function hmacSha1(url: string, key: string) {
     new TextEncoder().encode(key),
     { name: "HMAC", hash: "SHA-1" }, // algorithm details,
     false, // export = false
-    ["sign", "verify"] // what this key can do
+    ["sign", "verify"], // what this key can do
   );
 
   const signature = await crypto.subtle.sign(
     "HMAC",
     cryptoKey,
-    new TextEncoder().encode(url)
+    new TextEncoder().encode(url),
   );
 
   return signature;

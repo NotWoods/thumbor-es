@@ -1,4 +1,4 @@
-import { encodeBase64 } from "@std/encoding";
+import { encodeBase64 } from "@std/encoding/base64";
 import { hmacSha1 } from "./hmac.ts";
 
 /** Original size for image width or height. **/
@@ -80,15 +80,15 @@ export interface BaseThumborUrlOptions {
   trim?:
     | boolean
     | {
-        /** orientation from where to get the pixel color. */
-        value: TrimPixelColor;
-        /**
-         * 0 - 442. This is the euclidian distance
-         * between the colors of the reference pixel and the surrounding pixels is used.
-         * @default 0
-         */
-        colorTolerance?: number;
-      };
+      /** orientation from where to get the pixel color. */
+      value: TrimPixelColor;
+      /**
+       * 0 - 442. This is the euclidian distance
+       * between the colors of the reference pixel and the surrounding pixels is used.
+       * @default 0
+       */
+      colorTolerance?: number;
+    };
   /**
    * Constrain the image size inside the resized box, scaling as needed.
    *
@@ -153,7 +153,7 @@ export interface ThumborUrlResizedOptions extends BaseThumborUrlOptions {
  * ```
  */
 export function buildThumborUrl(
-  args: BaseThumborUrlOptions & { resize?: undefined }
+  args: BaseThumborUrlOptions & { resize?: undefined },
 ): Promise<string>;
 /**
  * Builds URL for the Thumbor image service using a fluent API.
@@ -173,7 +173,7 @@ export function buildThumborUrl(
  * ```
  */
 export function buildThumborUrl(
-  args: ThumborUrlResizedOptions
+  args: ThumborUrlResizedOptions,
 ): Promise<string>;
 export async function buildThumborUrl({
   image,

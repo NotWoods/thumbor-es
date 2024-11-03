@@ -1,8 +1,8 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import {
-  type Color,
   blur,
   brightness,
+  type Color,
   contrast,
   equalize,
   fill,
@@ -82,7 +82,7 @@ Deno.test(function testFilterRoundCornerFormat() {
   assertEquals(roundCorner(10, WHITE), "round_corner(10,255,255,255)");
   assertEquals(
     roundCorner(10, 15, { r: 255, g: 16, b: 16 }),
-    "round_corner(10|15,255,16,16)"
+    "round_corner(10|15,255,16,16)",
   );
 });
 
@@ -96,11 +96,11 @@ Deno.test(function testFilterWatermarkFormat() {
   assertEquals(watermark("a.png"), "watermark(a.png,0,0,0)");
   assertEquals(
     watermark("a.png", { x: 20, y: 20 }),
-    "watermark(a.png,20,20,0)"
+    "watermark(a.png,20,20,0)",
   );
   assertEquals(
     watermark("a.png", { x: 20, y: 20, transparency: 50 }),
-    "watermark(a.png,20,20,50)"
+    "watermark(a.png,20,20,50)",
   );
 });
 
@@ -109,11 +109,11 @@ Deno.test(function testFilterSharpenFormat() {
   assertEquals(sharpen(3, 4, { luminanceOnly: false }), "sharpen(3,4,false)");
   assertEquals(
     sharpen(3.1, 4.2, { luminanceOnly: true }),
-    "sharpen(3.1,4.2,true)"
+    "sharpen(3.1,4.2,true)",
   );
   assertEquals(
     sharpen(3.1, 4.2, { luminanceOnly: false }),
-    "sharpen(3.1,4.2,false)"
+    "sharpen(3.1,4.2,false)",
   );
 });
 

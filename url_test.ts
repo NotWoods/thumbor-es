@@ -5,11 +5,11 @@ import {
   assertThrows,
 } from "@std/assert";
 import {
-  ORIGINAL_SIZE,
   brightness,
   buildThumborUrl,
   contrast,
   grayscale,
+  ORIGINAL_SIZE,
   roundCorner,
   watermark,
 } from "./mod.ts";
@@ -23,7 +23,7 @@ Deno.test(async function testNoConfig() {
     await buildThumborUrl({
       image: "http://a.com/b.png",
     }),
-    "/unsafe/http://a.com/b.png"
+    "/unsafe/http://a.com/b.png",
   );
 });
 
@@ -33,7 +33,7 @@ Deno.test(async function testHost() {
       image: "http://a.com/b.png",
       host: "https://thumbor.example.com",
     }),
-    "https://thumbor.example.com/unsafe/http://a.com/b.png"
+    "https://thumbor.example.com/unsafe/http://a.com/b.png",
   );
 });
 
@@ -60,7 +60,7 @@ Deno.test(async function testComplexUnsafeBuild() {
       },
       filters: [watermark(watermarkImageUrl, { x: 10, y: 10 }), roundCorner(5)],
     }),
-    expected
+    expected,
   );
 });
 
@@ -91,7 +91,7 @@ Deno.test(async function testComplexSafeBuild() {
         roundCorner(5, { r: 255, g: 255, b: 255 }),
       ],
     }),
-    expected
+    expected,
   );
 });
 
