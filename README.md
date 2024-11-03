@@ -1,4 +1,4 @@
-# @notwoods/thumbor-es
+# thumbor-es
 
 _TypeScript Thumbor client for Node, Deno, Bun, & browsers_
 
@@ -22,8 +22,8 @@ and [on JSR](https://jsr.io/@notwoods/thumbor-es/doc/filters).
 # deno
 deno add jsr:@notwoods/thumbor-es
 
-# npm (use any of npx, yarn dlx, pnpm dlx, or bunx)
-npx jsr add @notwoods/thumbor-es
+# npm
+npm install thumbor-es
 ```
 
 ## Examples
