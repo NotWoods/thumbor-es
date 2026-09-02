@@ -172,6 +172,14 @@ export function roundCorner(
   return filter;
 }
 
+type WatermarkPosition =
+  | number
+  | "center"
+  | "repeat"
+  | `${number}p`
+  // deno-lint-ignore ban-types
+  | (string & {});
+
 /**
  * This filter adds a watermark to the image.
  *
@@ -184,22 +192,45 @@ export function roundCorner(
  * from the top and negative numbers indicate position from the bottom.
  * @param options.transparency Watermark image transparency. Should be a number between 0 (fully opaque)
  * and 100 (fully transparent).
+ * @param options.widthRatio The width of the watermark image as a ratio of the width of the original image.
+ * Should be between 0 and 100.
+ * @param options.heightRatio The height of the watermark image as a ratio of the height of the original image.
+ * Should be between 0 and 100.
  * @throws {RangeError} if `imageUrl` is blank.
  */
 export function watermark(
   imageUrl: string,
   options: {
-    x?: number;
-    y?: number;
+    x?: WatermarkPosition;
+    y?: WatermarkPosition;
     transparency?: number;
+    widthRatio?: number;
+    heightRatio?: number;
   } = {},
 ): string {
-  const { x = 0, y = 0, transparency = 0 } = options;
+  const { x = 0, y = 0, transparency = 0, widthRatio, heightRatio } = options;
   if (!imageUrl) {
     throw new TypeError("Image URL must not be blank.");
   }
   checkInclusiveRange(transparency, 0, 100, "Transparency");
-  return `watermark(${imageUrl},${x},${y},${transparency})`;
+  if (widthRatio !== undefined) {
+    checkInclusiveRange(widthRatio, 0, 100, "Width Ratio");
+  }
+  if (heightRatio !== undefined) {
+    checkInclusiveRange(heightRatio, 0, 100, "Height Ratio");
+  }
+
+  const args = [imageUrl, x, y, transparency];
+  if (widthRatio !== undefined) {
+    args.push(widthRatio);
+  } else if (heightRatio !== undefined) {
+    if (widthRatio === undefined) {
+      args.push("none");
+    }
+    args.push(heightRatio);
+  }
+
+  return `watermark(${args.join(",")})`;
 }
 
 /**
